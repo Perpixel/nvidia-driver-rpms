@@ -26,9 +26,9 @@ jobs:
           containerfiles: |
             ./Containerfile
           image: |
-            ${{ env.IMAGE_NAME }}
+            quay.io/fedora-ostree-desktops/silverblue
           tags: |
-            ${{ steps.generate-tags.outputs.alias_tags }}
+            latest
           build-args: |
             BASE_IMAGE=${{ env.BASE_IMAGE }}
             FEDORA_MAJOR_VERSION=${{ env.FEDORA_MAJOR_VERSION }}
