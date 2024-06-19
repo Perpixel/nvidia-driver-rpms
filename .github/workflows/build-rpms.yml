@@ -15,9 +15,21 @@ jobs:
       packages: write
       id-token: write
     strategy:
+      matrix:
+        version: [40]
       fail-fast: false
 
-    steps: 
+    steps:
+      # Checkout push-to-registry action GitHub repository
+      - name: Checkout Push to Registry action
+        uses: actions/checkout@v4
+
+      - name: Variables
+        run: |
+            REPO=${{ github.repository }}
+            echo "IMAGE_NAME=nvidia-${REPO##*/}" >> $GITHUB_ENV
+            echo "FEDORA_MAJOR_VERSION=${{ matrix.version }}" >> $GITHUB_ENV
+            
       # Build image using Buildah action
       - name: Build Image
         id: build_image
