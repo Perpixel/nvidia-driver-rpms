@@ -10,5 +10,5 @@ FROM ${BASE_IMAGE}:${FEDORA_MAJOR_VERSION} as nvidia-builder
 ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION}"
 ARG NVIDIA_MAJOR_VERSION="${NVIDIA_MAJOR_VERSION}"
 COPY scripts /tmp/
-RUN /tmp/scripts/build.sh
+RUN /tmp/build.sh
 # End
