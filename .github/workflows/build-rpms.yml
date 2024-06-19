@@ -1,4 +1,4 @@
-name: Build Silverblue container
+name: Build nvidia driver
 on:
   workflow_call:
 env:
