@@ -1,0 +1,20 @@
+name: Build All
+on:
+  pull_request:
+  merge_group:
+  schedule:
+    - cron: '0 7 * * *'  # 7 am everyday
+  workflow_dispatch:
+
+jobs:
+
+  # build oci container image
+  job-build-system:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    strategy:
+      fail-fast: false
+    uses: ./.github/workflows/build-rpms.yml
+    secrets: inherit
