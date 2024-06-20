@@ -9,6 +9,7 @@ ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION}"
 FROM ${BASE_IMAGE}:${FEDORA_MAJOR_VERSION} as nvidia-builder
 ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION}"
 ARG NVIDIA_MAJOR_VERSION="${NVIDIA_MAJOR_VERSION}"
-COPY scripts /tmp/
-RUN /tmp/scripts/build.sh
+COPY scripts /tmp/scripts/
+RUN /tmp/scripts/install-build-env.sh
+ENTRYPOINT ["/tmp/scripts/build.sh"]
 # End

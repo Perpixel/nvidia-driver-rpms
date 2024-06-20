@@ -13,32 +13,14 @@ BUILD_PATH=/tmp/build
 SOURCES_PATH=~/rpmbuild/SOURCES
 RPMS_PATH=~/rpmbuild/RPMS/x86_64
 
-# cleanup
-rm -rf ~/rpmbuild
-rm -rf /tmp/build/*
-mkdir -p ~/rpmbuild/SPECS
-
-# setup fedora build packages
-dnf install wget git -y
-
-# download and install rpm fusion package
-wget -P /tmp/rpms \
-	https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-${FEDORA_MAJOR_VERSION}.noarch.rpm \
-	https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${FEDORA_MAJOR_VERSION}.noarch.rpm
-dnf install /tmp/rpms/*.rpm fedora-repos-archive -y
-
 setup_sources() {
 	cd ${BUILD_PATH}
 	ln -nsf ${BUILD_PATH}/${1} ${SOURCES_PATH}
 }
 
-dnf install \
-	rpm-build rpmspectool libappstream-glib systemd-rpm-macros rpmdevtools gcc \
-	mesa-libGL-devel mesa-libEGL-devel libvdpau-devel libXxf86vm-devel libXv-devel \
-	desktop-file-utils hostname gtk3-devel m4 pkgconfig mock libtirpc-devel \
-	buildsys-build-rpmfusion-kerneldevpkgs-current elfutils-libelf-devel -y
-
-mkdir -p /root/rpmbuild/
+mkdir -p ${HOME}/rpmbuild
+mkdir -p ${HOME}/rpmbuild/SPECS
+mkdir -p ${BUILD_PATH}
 
 cd ${BUILD_PATH}
 git clone https://github.com/rpmfusion/xorg-x11-drv-nvidia.git
@@ -87,3 +69,5 @@ setup_sources ${name}
 wget -P ${SOURCES_PATH} https://download.nvidia.com/XFree86/${name}/${name}-${NVIDIA_VERSION}.tar.bz2
 rpmbuild --bb ${SOURCES_PATH}/${name}.spec
 
+mv ~/rpmbuild/RPMS/* /tmp/rpms/
+ls -la /tmp/rpms/
