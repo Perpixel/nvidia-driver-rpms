@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -oeux pipefail
-
 readonly BUILD_PATH="./build/"
 readonly SCRIPT_PATH="./scripts"
 readonly BASE_IMAGE="registry.fedoraproject.org/fedora"
