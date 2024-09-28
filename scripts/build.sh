@@ -5,8 +5,8 @@ set -oeux pipefail
 RELEASE="$(rpm -E '%fedora.%_arch')"
 
 BUILD_PATH=/tmp/build
-SOURCES_PATH=~/rpmbuild/SOURCES
-RPMS_PATH=~/rpmbuild/RPMS/x86_64
+SOURCES_PATH=/tmp/rpmbuild/SOURCES
+RPMS_PATH=/tmp/rpmbuild/RPMS/x86_64
 
 setup_sources() {
   cd ${BUILD_PATH}
@@ -14,8 +14,7 @@ setup_sources() {
 }
 
 create_build_dirs() {
-  mkdir -p ${HOME}/rpmbuild
-  mkdir -p ${HOME}/rpmbuild/SPECS
+  mkdir -p /tmp/rpmbuild/SPECS
   mkdir -p ${BUILD_PATH}
 }
 
@@ -36,15 +35,15 @@ build_driver() {
   ./nvidia-snapshot.sh
   NVIDIA_SPEC=$(ls xorg-x11-drv-nvidia*.spec)
   NVIDIA_VERSION=$(grep ^Version: ${NVIDIA_SPEC} | awk '{print $2}')
-  rpmbuild --bb xorg-x11-drv-nvidia.spec
+  rpmbuild xorg-x11-drv-nvidia.spec --bb --define "_topdir /tmp/rpmbuild"
   dnf install ${RPMS_PATH}/xorg-x11-drv-nvidia-kmodsrc-*.rpm -y
 }
 
 build_kmod() {
   # nvidia-kmod
   setup_sources nvidia-kmod
-  ln -nsf ${SOURCES_PATH}/nvidia-kmod.spec ~/rpmbuild/SPECS/nvidia-kmod.spec
-  rpmbuild --bb ${SOURCES_PATH}/nvidia-kmod.spec
+  ln -nsf ${SOURCES_PATH}/nvidia-kmod.spec /tmp/rpmbuild/SPECS/nvidia-kmod.spec
+  rpmbuild ${SOURCES_PATH}/nvidia-kmod.spec --define "_topdir /tmp/rpmbuild"
 }
 
 build_apps() {
@@ -52,25 +51,25 @@ build_apps() {
   name=nvidia-modprobe
   setup_sources ${name}
   wget -P ${SOURCES_PATH} https://download.nvidia.com/XFree86/${name}/${name}-${NVIDIA_VERSION}.tar.bz2
-  rpmbuild --bb ${SOURCES_PATH}/${name}.spec
+  rpmbuild ${SOURCES_PATH}/${name}.spec --define "_topdir /tmp/rpmbuild"
 
   # nvidia-setting
   name=nvidia-settings
   setup_sources ${name}
   wget -P ${SOURCES_PATH} https://download.nvidia.com/XFree86/${name}/${name}-${NVIDIA_VERSION}.tar.bz2
-  rpmbuild --bb ${SOURCES_PATH}/${name}.spec
+  rpmbuild ${SOURCES_PATH}/${name}.spec --define "_topdir /tmp/rpmbuild"
 
   # nvidia-xconfig
   name=nvidia-xconfig
   setup_sources ${name}
   wget -P ${SOURCES_PATH} https://download.nvidia.com/XFree86/${name}/${name}-${NVIDIA_VERSION}.tar.bz2
-  rpmbuild --bb ${SOURCES_PATH}/${name}.spec
+  rpmbuild ${SOURCES_PATH}/${name}.spec --define "_topdir /tmp/rpmbuild"
 
   # nvidia-persistenced
   name=nvidia-persistenced
   setup_sources ${name}
   wget -P ${SOURCES_PATH} https://download.nvidia.com/XFree86/${name}/${name}-${NVIDIA_VERSION}.tar.bz2
-  rpmbuild --bb ${SOURCES_PATH}/${name}.spec
+  rpmbuild ${SOURCES_PATH}/${name}.spec --define "_topdir /tmp/rpmbuild"
 }
 
 create_archive() {
