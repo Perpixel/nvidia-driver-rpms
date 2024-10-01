@@ -10,7 +10,10 @@ RPMBUILD_PATH=${BUILD_PATH}/rpmbuild
 SOURCES_PATH=${RPMBUILD_PATH}/SOURCES
 RPMS_PATH=${BUILD_PATH}/rpmbuild/RPMS/${ARCH}
 
-if command -v dnf5 &> /dev/null; then alias dnf=dnf5; fi
+if command -v dnf5 &> /dev/null;
+then
+  alias dnf=dnf5
+fi
 
 build_rpm() {
   rpmbuild ${1} --bb --define "_topdir ${BUILD_PATH}/rpmbuild"
@@ -108,5 +111,9 @@ build_driver
 build_kmod
 build_apps
 
-if [ ${IS_LOCAL_BUILD} = 1 ]; then create_archive fi
+if [ ${IS_LOCAL_BUILD} = 1 ];
+then
+  create_archive
+fi
+
 exit 0
