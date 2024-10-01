@@ -10,7 +10,9 @@ jobs:
     container:
       image: quay.io/fedora/fedora-minimal:40
       volumes:
-        - ./scripts/:/tmp/scripts/
+        - ./:/depot
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
       - name: Run build script
-        run: /tmp/scripts/build-nvidia-drv.sh
+        run: cd /depot && ls && /tmp/scripts/build-nvidia-drv.sh
