@@ -1,8 +1,13 @@
 name: Build Nvidia drivers
 on:
+  push:
+    branches:
+      - master
   pull_request:
   merge_group:
   workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * *'
 jobs:
   build-drv:
     runs-on: ubuntu-latest
@@ -15,7 +20,7 @@ jobs:
     steps:
       - name: Install build env
         run: |
-          if command -v dnf5 &> /dev/null; then alias dnf=dnf5; fi
+          if command -v dnf5 &> /dev/null; then; alias dnf=dnf5; fi
           dnf install tar curl gzip git -y
       - name: Checkout repo
         uses: actions/checkout@v4

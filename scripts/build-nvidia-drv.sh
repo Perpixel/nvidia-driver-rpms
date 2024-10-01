@@ -111,7 +111,7 @@ build_driver
 build_kmod
 build_apps
 
-if [ ${IS_LOCAL_BUILD} = 1 ];
+if [ -z ${CI} ];
 then
   create_archive
 fi
