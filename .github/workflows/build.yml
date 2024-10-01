@@ -13,8 +13,8 @@ jobs:
       - name: Install build env
         run: |
           if command -v dnf5 &> /dev/null; then alias dnf=dnf5; fi
-          dnf install tar curl gzip -y
+          dnf install tar curl gzip git -y
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Run build script
-        run: cd /depot && ls && /tmp/scripts/build-nvidia-drv.sh
+        run: ls -la $GITHUB_WORKSPACE && cd $GITHUB_WORKSPACE && ls && /tmp/scripts/build-nvidia-drv.sh
