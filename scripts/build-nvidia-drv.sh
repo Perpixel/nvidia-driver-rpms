@@ -108,8 +108,6 @@ build_driver
 build_kmod
 build_apps
 
-if [ -n ${IS_LOCAL_BUILD} ]; then
-  create_archive
-fi
+[ ${IS_LOCAL_BUILD} = 1 ]; create_archive
 
 exit 0
