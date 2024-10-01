@@ -21,7 +21,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Run build script
         run: |
-          echo ${{ matrix.version }}
-          rpm -E '%fedora.%_arch'
-          # IS_LOCAL_BUILD=0
-          # $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
+          IS_LOCAL_BUILD=0
+          $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
