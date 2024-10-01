@@ -108,8 +108,8 @@ build_driver
 build_kmod
 build_apps
 
-echo Write rpms
-
 if [ -n ${IS_LOCAL_BUILD} ]; then
   create_archive
 fi
+
+exit 0
