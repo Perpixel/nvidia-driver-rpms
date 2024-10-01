@@ -9,9 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: quay.io/fedora/fedora-minimal:40
-      env: IS_LOCAL_BUILD=0
       volumes:
         - ./scripts/:/tmp/scripts/
-      steps:
-        - name: Run build script
-          run: /tmp/scripts/build-nvidia-drv.sh
+    steps:
+      - name: Run build script
+        run: /tmp/scripts/build-nvidia-drv.sh
