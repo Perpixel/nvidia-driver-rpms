@@ -13,7 +13,7 @@ jobs:
       - name: Install build env
         run: |
           if command -v dnf5 &> /dev/null; then alias dnf=dnf5; fi
-          dnf install tar curl -y
+          dnf install tar curl gzip -y
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Run build script
