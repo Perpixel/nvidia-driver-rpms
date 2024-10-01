@@ -17,4 +17,4 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Run build script
-        run: ls -la $GITHUB_WORKSPACE && cd $GITHUB_WORKSPACE && ls && /tmp/scripts/build-nvidia-drv.sh
+        run: $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
