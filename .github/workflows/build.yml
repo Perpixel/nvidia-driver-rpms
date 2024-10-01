@@ -20,6 +20,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Run build script
+        env:
+          IS_LOCAL_BUILD: 0
         run: |
-          IS_LOCAL_BUILD=0
           $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
+          ls -la /tmp/nvidia-drv/rpmbuild/RPMS/x86_64
