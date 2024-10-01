@@ -11,7 +11,9 @@ jobs:
       image: quay.io/fedora/fedora-minimal:40
     steps:
       - name: Install build env
-        run: dnf5 install tar curl
+        run: |
+          if command -v dnf5 &> /dev/null; then alias dnf=dnf5; fi
+          dnf install tar curl -y
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Run build script
