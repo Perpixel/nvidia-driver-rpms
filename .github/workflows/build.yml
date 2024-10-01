@@ -1,0 +1,17 @@
+name: Build Nvidia drivers
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+    
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/fedora/fedora-minimal:40
+      env: IS_LOCAL_BUILD=0
+      volumes:
+        - ./scripts/:/tmp/scripts/
+      steps:
+        - name: Run build script
+          run: /tmp/scripts/build-nvidia-drv.sh
