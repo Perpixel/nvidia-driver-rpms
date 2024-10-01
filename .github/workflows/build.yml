@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: quay.io/fedora/fedora-minimal:40
-      volumes:
-        - ./:/depot
     steps:
+      - name: Install build env
+        run: dnf5 install tar curl
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Run build script
