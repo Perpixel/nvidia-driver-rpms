@@ -108,6 +108,5 @@ build_driver
 build_kmod
 build_apps
 
-[ ${IS_LOCAL_BUILD} = 1 ]; create_archive
-
+if [ ${IS_LOCAL_BUILD} = 1 ]; then create_archive fi
 exit 0
