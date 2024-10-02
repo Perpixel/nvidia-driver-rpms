@@ -12,19 +12,12 @@ jobs:
   build-drv:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/fedora/fedora-minimal:${{ matrix.version }}
+      image: quay.io/fedora/fedora:${{ matrix.version }}
     strategy:
       matrix:
         version: [40, 41]
       fail-fast: false
     steps:
-      - name: Install build env
-        run: |
-          if command -v dnf5 &> /dev/null
-          then
-          alias dnf=dnf5
-          fi
-          dnf install tar curl gzip git bash -y
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Run build script

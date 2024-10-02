@@ -7,13 +7,7 @@ ARCH="$(rpm -E '%_arch')"
 
 BUILD_PATH=/tmp/nvidia-drv
 RPMBUILD_PATH=${BUILD_PATH}/rpmbuild
-SOURCES_PATH=${RPMBUILD_PATH}/SOURCES
-RPMS_PATH=${BUILD_PATH}/rpmbuild/RPMS/${ARCH}
 BUILD=false
-
-if command -v dnf5 &>/dev/null; then
-  dnf5 install dnf -y -q &>/dev/null
-fi
 
 build_rpm() {
   rpmbuild ${1} --quiet --bb --define "_topdir ${BUILD_PATH}/rpmbuild"
@@ -41,25 +35,28 @@ setup_rpm_build_env() {
 setup_sources() {
   echo Setting up ${1} sources...
   mkdir -p ${RPMBUILD_PATH}
-  ln -nsf ${BUILD_PATH}/${1} ${SOURCES_PATH}
-  cd ${SOURCES_PATH}
+  ln -nsf ${BUILD_PATH}/${1} ${RPMBUILD_PATH}/SOURCES
+  cd ${RPMBUILD_PATH}/SOURCES
+}
+
+clone_repo() {
+  echo ${1}...
+  cd ${BUILD_PATH}
+  git clone https://github.com/rpmfusion/${1}
+  DAY=86400
+  LAST_PUSH=$(($(date +%s) - $(git --git-dir=./${1}/.git log -1 --pretty="format:%ct" master)))
+  if [ ${DAY} -gt ${LAST_PUSH} ]; then
+    # Repo updated in the last 24 hours so rebuild the packages
+    BUILD=true
+  fi
 }
 
 pull_git_repos() {
   echo Clone required RPM Fusion projects from Github...
   mkdir -p ${BUILD_PATH}
-  cd ${BUILD_PATH}
-
   REPOS=("xorg-x11-drv-nvidia" "nvidia-kmod" "nvidia-modprobe" "nvidia-xconfig" "nvidia-settings" "nvidia-persistenced")
-  for IT in "${REPOS[@]}"; do
-    echo ${IT}...
-    git clone https://github.com/rpmfusion/${IT}
-    DAY=86400
-    LAST_PUSH=$(($(date +%s) - $(git --git-dir=./${IT}/.git log -1 --pretty="format:%ct" master)))
-    if [ ${DAY} -gt ${LAST_PUSH} ]; then
-      echo BUILD ${IT}
-      BUILD=true
-    fi
+  for ITEM in "${REPOS[@]}"; do
+    clone_repo ${ITEM}
   done
 }
 
@@ -70,7 +67,7 @@ build_driver() {
   NVIDIA_VERSION=$(grep ^Version: ${NVIDIA_SPEC} | awk '{print $2}')
   curl -O https://download.nvidia.com/XFree86/Linux-${ARCH}/${NVIDIA_VERSION}/NVIDIA-Linux-${ARCH}-${NVIDIA_VERSION}.run
   build_rpm xorg-x11-drv-nvidia.spec
-  dnf install ${RPMS_PATH}/xorg-x11-drv-nvidia-kmodsrc-*.rpm -y -q
+  dnf install ${RPMBUILD_PATH}/RPMS/${ARCH}/xorg-x11-drv-nvidia-kmodsrc-${NVIDIA_VERSION}-*.fc${FEDORA_MAJOR_VERSION}.${ARCH}.rpm -y -q
 }
 
 build_kmod() {
@@ -105,14 +102,15 @@ build_apps() {
 }
 
 create_archive() {
-  cd ${RPMS_PATH}/
-  tar -czvf nvidia-drv-${NVIDIA_VERSION}.fc${FEDORA_MAJOR_VERSION}.${ARCH}.tar.gz *
+  cd ${RPMBUILD_PATH}/RPMS/${ARCH}/
+  tar -czvf ../nvidia-drv-${NVIDIA_VERSION}.fc${FEDORA_MAJOR_VERSION}.${ARCH}.tar.gz *.fc${FEDORA_MAJOR_VERSION}.${ARCH}.rpm
 }
 
 setup_rpm_build_env
 pull_git_repos
 
-if [ "$BUILD" = true ]; then
+# Build only if the BUILD variable is set to true
+if [ "${BUILD}" -o "${FORCE_BUILD}" ]; then
   build_driver
   build_kmod
   build_apps
