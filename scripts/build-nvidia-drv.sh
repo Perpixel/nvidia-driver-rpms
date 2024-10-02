@@ -110,7 +110,8 @@ setup_rpm_build_env
 pull_git_repos
 
 # Build only if the BUILD variable is set to true
-if [ "${BUILD}" -o "${FORCE_BUILD}" ]; then
+
+if [ "${BUILD}" ]; then
   build_driver
   build_kmod
   build_apps
