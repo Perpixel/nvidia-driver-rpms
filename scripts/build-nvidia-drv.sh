@@ -107,7 +107,6 @@ build_apps() {
 create_archive() {
   cd ${RPMS_PATH}/
   tar -czvf nvidia-drv-${NVIDIA_VERSION}.fc${FEDORA_MAJOR_VERSION}.${ARCH}.tar.gz *
-  mv nvidia-drv-*.tar.gz /tmp/rpms/
 }
 
 setup_rpm_build_env
