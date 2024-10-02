@@ -9,7 +9,7 @@ BUILD_PATH=/tmp/nvidia-drv
 RPMBUILD_PATH=${BUILD_PATH}/rpmbuild
 SOURCES_PATH=${RPMBUILD_PATH}/SOURCES
 RPMS_PATH=${BUILD_PATH}/rpmbuild/RPMS/${ARCH}
-BUILD=false
+BUILD=true
 
 if command -v dnf5 &>/dev/null; then
   dnf5 install dnf -y -q &>/dev/null
