@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -oeux pipefail
 
@@ -11,8 +11,8 @@ SOURCES_PATH=${RPMBUILD_PATH}/SOURCES
 RPMS_PATH=${BUILD_PATH}/rpmbuild/RPMS/${ARCH}
 BUILD=false
 
-if command -v dnf5 &> /dev/null; then
-  dnf5 install dnf -y -q &> /dev/null
+if command -v dnf5 &>/dev/null; then
+  dnf5 install dnf -y -q &>/dev/null
 fi
 
 build_rpm() {
@@ -24,7 +24,7 @@ setup_rpm_build_env() {
   mkdir -p ${BUILD_PATH}
 
   dnf install wget curl git tar -y -q
-  
+
   # download and install rpm fusion package
   wget -P ${BUILD_PATH}/rpmfusion \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-${FEDORA_MAJOR_VERSION}.noarch.rpm \
@@ -49,14 +49,13 @@ pull_git_repos() {
   echo Clone required RPM Fusion projects from Github...
   mkdir -p ${BUILD_PATH}
   cd ${BUILD_PATH}
-  
+
   REPOS=("xorg-x11-drv-nvidia" "nvidia-kmod" "nvidia-modprobe" "nvidia-xconfig" "nvidia-settings" "nvidia-persistenced")
-  for IT in "${REPOS[@]}"
-  do
+  for IT in "${REPOS[@]}"; do
     echo ${IT}...
     git clone https://github.com/rpmfusion/${IT}
     DAY=86400
-    LAST_PUSH=$(( $(date +%s) - $(git --git-dir=./${IT}/.git log -1 --pretty="format:%ct" master) ))
+    LAST_PUSH=$(($(date +%s) - $(git --git-dir=./${IT}/.git log -1 --pretty="format:%ct" master)))
     if [ ${DAY} -gt ${LAST_PUSH} ]; then
       echo BUILD ${IT}
       BUILD=true
@@ -113,9 +112,12 @@ create_archive() {
 
 setup_rpm_build_env
 pull_git_repos
-build_driver
-build_kmod
-build_apps
-create_archive
+
+if [ "$BUILD" = true ]; then
+  build_driver
+  build_kmod
+  build_apps
+  create_archive
+fi
 
 exit 0
