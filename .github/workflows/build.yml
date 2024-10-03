@@ -27,4 +27,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           artifacts: "/tmp/nvidia-drv/rpmbuild/RPMS/*.tar.gz"
+          name: "test release"
+          body: "body"
+          draft: true
 
