@@ -27,7 +27,8 @@ jobs:
         env:
           BUILD: false
         run: |
-          $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
+          cd $GITHUB_WORKSPACE
+          ./scripts/build-nvidia-drv.sh
       - name: Push version tag
         uses: rickstaa/action-create-tag@v1
         id: "tag_create"
