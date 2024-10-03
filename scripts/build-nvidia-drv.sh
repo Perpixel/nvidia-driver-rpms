@@ -103,9 +103,9 @@ build_apps() {
 create_archive() {
   cd ${RPMBUILD_PATH}/RPMS/${ARCH}/
   tar -czvf ../nvidia-drv-${NVIDIA_VERSION}.fc${FEDORA_MAJOR_VERSION}.${ARCH}.tar.gz *.fc${FEDORA_MAJOR_VERSION}.${ARCH}.rpm
-  export NVIDIA_VERSION=${NVIDIA_VERSION}
-  export FEDORA_MAJOR_VERSION=${FEDORA_MAJOR_VERSION}
-  export ARCH=${ARCH}
+  echo "NVIDIA_VERSION=${NVIDIA_VERSION}" >> "$GITHUB_OUTPUT"
+  echo "FEDORA_MAJOR_VERSION=${FEDORA_MAJOR_VERSION}" >> "$GITHUB_OUTPUT"
+  echo "ARCH=${ARCH}" >> "$GITHUB_OUTPUT"
 }
 
 setup_rpm_build_env
