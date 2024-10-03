@@ -29,17 +29,22 @@ jobs:
         run: |
           # $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
       - name: Push version tag
-        uses: laputansoft/github-tag-action@v7
+        uses: actions/github-script@v5
         with:
-          github_token: ${{ env.github-token }}
-          tag: ${{ steps.run-build-script.outputs.NVIDIA_VERSION }}
+          script: |
+            github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: 'refs/tags/${{ steps.run-build-script.outputs.NVIDIA_VERSION }}',
+            sha: context.sha
+            })
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             /tmp/nvidia-drv/rpmbuild/RPMS/*.tar.gz
           name: "Nvidia Drivers - ${{ steps.run-build-script.outputs.NVIDIA_VERSION }}"
-          body: "v${{ steps.run-build-script.outputs.NVIDIA_VERSION }}"
+          body: "${{ steps.run-build-script.outputs.NVIDIA_VERSION }}"
           draft: false
           make_latest: true
 
