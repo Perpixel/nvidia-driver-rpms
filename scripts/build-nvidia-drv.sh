@@ -7,7 +7,6 @@ ARCH="$(rpm -E '%_arch')"
 
 BUILD_PATH=/tmp/nvidia-drv
 RPMBUILD_PATH=${BUILD_PATH}/rpmbuild
-BUILD=false
 
 build_rpm() {
   rpmbuild ${1} --quiet --bb --define "_topdir ${BUILD_PATH}/rpmbuild"
