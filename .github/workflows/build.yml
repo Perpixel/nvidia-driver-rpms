@@ -27,7 +27,7 @@ jobs:
         env:
           BUILD: false
         run: |
-          # $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
+          $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
       - name: Push version tag
         uses: actions/github-script@v5
         with:
