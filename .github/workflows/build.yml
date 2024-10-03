@@ -26,8 +26,11 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          artifacts: "/tmp/nvidia-drv/rpmbuild/RPMS/*.tar.gz"
+          files: |
+            /tmp/nvidia-drv/rpmbuild/RPMS/nvidia-drv-560.35.03.fc40.x86_64.tar.gz
+            /tmp/nvidia-drv/rpmbuild/RPMS/nvidia-drv-560.35.03.fc41.x86_64.tar.gz
           name: "test release"
           body: "body"
           draft: true
+          make_latest: true
 
