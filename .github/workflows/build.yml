@@ -39,15 +39,3 @@ jobs:
           tag_name: "${{ steps.run-build-script.outputs.NVIDIA_VERSION }}"
           draft: false
           make_latest: true
-  release-drv:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Push version tag
-        uses: rickstaa/action-create-tag@v1
-        id: "tag_create"
-        with:
-          tag: "${{ steps.run-build-script.outputs.NVIDIA_VERSION }}"
-          tag_exists_error: false
-          message: "Driver ${{ steps.run-build-script.outputs.NVIDIA_VERSION }}"
