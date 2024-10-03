@@ -27,10 +27,17 @@ jobs:
         env:
           BUILD: false
         run: |
-          $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
+          # $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
+          NVIDIA_VERSION=test
+          echo "NVIDIA_VERSION=${NVIDIA_VERSION}"
           echo "NVIDIA_VERSION=${NVIDIA_VERSION}" >> "$GITHUB_OUTPUT"
           #echo "FEDORA_MAJOR_VERSION=${FEDORA_MAJOR_VERSION}" >> "$GITHUB_OUTPUT"
           #echo "ARCH=${ARCH}" >> "$GITHUB_OUTPUT"
+      - name: Push version tag
+        uses: laputansoft/github-tag-action@v4.6
+        with:
+          github_token: ${{ env.github-token }}
+          tag: ${{ steps.run-build-script.outputs.NVIDIA_VERSION }}
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
