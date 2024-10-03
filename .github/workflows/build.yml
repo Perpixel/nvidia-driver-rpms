@@ -21,8 +21,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Run build script
-        env:
-          IS_LOCAL_BUILD: 0
         run: |
           $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
-          ls -la /tmp/nvidia-drv/rpmbuild/RPMS/x86_64
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          artifacts: "/tmp/nvidia-drv/rpmbuild/RPMS/*.tar.gz"
+
