@@ -29,7 +29,7 @@ jobs:
         run: |
           # $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
       - name: Push version tag
-        uses: laputansoft/github-tag-action@v4.6
+        uses: laputansoft/github-tag-action@v7
         with:
           github_token: ${{ env.github-token }}
           tag: ${{ steps.run-build-script.outputs.NVIDIA_VERSION }}
