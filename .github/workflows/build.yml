@@ -11,6 +11,8 @@ on:
 jobs:
   build-drv:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: quay.io/fedora/fedora:${{ matrix.version }}
     strategy:
@@ -21,8 +23,28 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Run build script
+        id: run-build-script
         env:
-          IS_LOCAL_BUILD: 0
+          BUILD: false
         run: |
           $GITHUB_WORKSPACE/scripts/build-nvidia-drv.sh
-          ls -la /tmp/nvidia-drv/rpmbuild/RPMS/x86_64
+      - name: Push version tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: 'refs/tags/${{ steps.run-build-script.outputs.NVIDIA_VERSION }}',
+            sha: context.sha
+            })
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            /tmp/nvidia-drv/rpmbuild/RPMS/*.tar.gz
+          name: "Nvidia Drivers - ${{ steps.run-build-script.outputs.NVIDIA_VERSION }}"
+          body: "${{ steps.run-build-script.outputs.NVIDIA_VERSION }}"
+          draft: false
+          make_latest: true
+
