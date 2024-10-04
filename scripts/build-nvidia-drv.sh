@@ -8,6 +8,10 @@ ARCH="$(rpm -E '%_arch')"
 BUILD_PATH=/tmp/nvidia-drv
 RPMBUILD_PATH=${BUILD_PATH}/rpmbuild
 
+rm -rf /etc/yum.repos.d/fedora-cisco-openh264.repo
+rm -rf /etc/yum.repos.d/fedora-updates-archive.repo
+rm -rf /etc/yum.repos.d/fedora-updates-testing.repo
+
 build_rpm() {
   rpmbuild ${1} --quiet --bb --define "_topdir ${BUILD_PATH}/rpmbuild"
 }
